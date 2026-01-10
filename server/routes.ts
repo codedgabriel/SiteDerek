@@ -9,16 +9,26 @@ export async function registerRoutes(
 ): Promise<Server> {
   
   app.get(api.profile.get.path, async (req, res) => {
-    const profile = await storage.getProfile();
-    if (!profile) {
-      return res.status(404).json({ message: 'Profile not found' });
+    try {
+      const profile = await storage.getProfile();
+      if (!profile) {
+        return res.status(404).json({ message: 'Profile not found' });
+      }
+      res.json(profile);
+    } catch (error: any) {
+      console.error("Error fetching profile:", error);
+      res.status(500).json({ message: error.message || 'Error fetching profile' });
     }
-    res.json(profile);
   });
 
   app.get(api.games.list.path, async (req, res) => {
-    const games = await storage.getGames();
-    res.json(games);
+    try {
+      const games = await storage.getGames();
+      res.json(games);
+    } catch (error: any) {
+      console.error("Error fetching games:", error);
+      res.status(500).json({ message: error.message || 'Error fetching games' });
+    }
   });
 
   // Seed data if empty
