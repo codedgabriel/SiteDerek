@@ -140,7 +140,7 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
                     </h3>
                     <div className="w-6 h-0.5 bg-red-600 mt-1.5 rounded-full transform origin-left scale-x-0 group-hover/item:scale-x-100 transition-transform duration-500"></div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             ))}
           </div>
