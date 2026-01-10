@@ -1,0 +1,270 @@
+import { useQuery } from "@tanstack/react-query";
+import { Game, Profile } from "@shared/schema";
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { SiDiscord } from "react-icons/si";
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function Home() {
+  const { data: profile, isLoading: profileLoading } = useQuery<Profile>({
+    queryKey: ["/api/profile"],
+  });
+
+  const { data: games, isLoading: gamesLoading } = useQuery<Game[]>({
+    queryKey: ["/api/games"],
+  });
+
+  const [emblaRef] = useEmblaCarousel(
+    { 
+      loop: true,
+      dragFree: true,
+      containScroll: false,
+      align: "center"
+    }, 
+    [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })]
+  );
+
+  if (profileLoading || gamesLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0000] p-6 space-y-12">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+        >
+          <Skeleton className="w-32 h-32 rounded-full bg-red-900/20" />
+        </motion.div>
+        <div className="space-y-4 w-full max-w-2xl">
+          <Skeleton className="h-8 w-1/3 mx-auto bg-red-900/10" />
+          <Skeleton className="h-4 w-full bg-red-900/5" />
+          <Skeleton className="h-4 w-full bg-red-900/5" />
+          <Skeleton className="h-4 w-2/3 mx-auto bg-red-900/5" />
+        </div>
+        <div className="flex gap-4 overflow-hidden w-full max-w-4xl">
+           {[1,2,3,4].map(i => (
+             <Skeleton key={i} className="flex-[0_0_280px] aspect-[2/3] rounded-2xl bg-red-900/5" />
+           ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) return null;
+
+  return (
+    <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
+      <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
+        {/* Background Glow */}
+        <motion.div 
+          animate={{ 
+            opacity: [0.3, 0.5, 0.3],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="fixed inset-0 bg-[radial-gradient(circle_at_50%_20%,_#450a0a_0%,_transparent_50%)] pointer-events-none" 
+        />
+
+        {/* Hero Section */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "circOut" }}
+          className="flex flex-col items-center text-center gap-4 relative z-10"
+        >
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative group cursor-pointer"
+          >
+            <div className="absolute -inset-4 bg-red-600/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition duration-700"></div>
+            <Avatar className="w-32 h-32 border-4 border-red-900/40 shadow-[0_0_50px_rgba(153,27,27,0.2)] transition-all duration-500 group-hover:border-red-600/60 group-hover:shadow-[0_0_70px_rgba(153,27,27,0.4)]">
+              <AvatarImage src={profile.avatarUrl} className="object-cover" />
+              <AvatarFallback className="bg-red-950 text-red-100 text-4xl font-black">R</AvatarFallback>
+            </Avatar>
+          </motion.div>
+          <div className="space-y-1">
+            <motion.h1 
+              initial={{ letterSpacing: "0.1em", opacity: 0 }}
+              animate={{ letterSpacing: "-0.05em", opacity: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic drop-shadow-2xl"
+            >
+              {profile.name}
+            </motion.h1>
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex items-center justify-center gap-3"
+            >
+              <div className="h-[1px] w-24 bg-red-900/50"></div>
+              <div className="h-[1px] w-24 bg-red-900/50"></div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* About Section */}
+        <motion.section 
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="w-full relative z-10"
+        >
+          <div className="flex flex-col gap-4 group">
+            <div className="flex items-center gap-3">
+              <span className="text-[9px] font-black uppercase tracking-[0.3em] text-red-600/80 group-hover:text-red-500 transition-colors">Sobre mim</span>
+              <motion.div 
+                initial={{ width: 0 }}
+                whileInView={{ width: "auto" }}
+                className="h-[1px] flex-grow bg-gradient-to-r from-red-900/40 to-transparent"
+              />
+            </div>
+            <p className="text-zinc-300 leading-relaxed text-base font-light italic pl-4 border-l border-red-800/50 transition-all duration-300">
+              {profile.about}
+            </p>
+          </div>
+        </motion.section>
+      </div>
+
+      {/* Games Carousel */}
+      <motion.section 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="w-full flex flex-col gap-6 z-10 my-8"
+      >
+        <div className="max-w-xl mx-auto w-full px-6 flex items-center gap-4 group">
+          <h2 className="text-[9px] uppercase tracking-[0.4em] text-red-700 font-black whitespace-nowrap transition-colors group-hover:text-red-500">
+            Jogos favoritos
+          </h2>
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            className="h-[1px] w-full bg-red-900/20 origin-left"
+          />
+        </div>
+        
+        <div className="relative w-full group overflow-hidden">
+          <div className="absolute left-0 top-0 bottom-0 w-[20%] bg-gradient-to-r from-[#0a0000] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-[20%] bg-gradient-to-l from-[#0a0000] to-transparent z-10 pointer-events-none" />
+          
+          <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
+            <div className="flex px-[10%]">
+              {games?.map((game, idx) => (
+                <motion.div 
+                  key={game.id} 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  className="flex-[0_0_220px] min-w-0 pl-4"
+                >
+                  <motion.div 
+                    whileHover={{ y: -8 }}
+                    className="group/item relative aspect-[2/3] rounded-xl overflow-hidden border border-red-900/20 transition-all duration-500 hover:border-red-600/50 shadow-2xl"
+                  >
+                    <img 
+                      src={game.imagePath || game.imageUrl} 
+                      alt={game.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
+                    <div className="absolute inset-0 bg-red-900/10 opacity-0 group-hover/item:opacity-40 transition-opacity" />
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 group-hover/item:translate-y-0 transition-transform duration-500">
+                      <h3 className="text-white font-black text-sm uppercase tracking-tight line-clamp-2 drop-shadow-lg">
+                        {game.title}
+                      </h3>
+                      <div className="w-6 h-0.5 bg-red-600 mt-1.5 rounded-full transform origin-left scale-x-0 group-hover/item:scale-x-100 transition-transform duration-500"></div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
+        {/* Discord Profile Card */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="w-full relative z-10"
+        >
+          <motion.div whileHover={{ scale: 1.01 }} className="h-full">
+            <Card className="bg-[#0f0f11] border-red-900/20 overflow-hidden relative group rounded-2xl shadow-2xl hover:border-red-600/30 transition-colors duration-500">
+              <div className="h-24 bg-red-900/10 relative overflow-hidden">
+                 <motion.div 
+                   animate={{ opacity: [0.1, 0.3, 0.1] }}
+                   transition={{ duration: 3, repeat: Infinity }}
+                   className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(153,27,27,0.2),_transparent)]" 
+                 />
+                 <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent" />
+              </div>
+              <CardContent className="p-6 pt-0 relative">
+                <div className="relative -top-12 flex flex-col gap-4">
+                  <div className="flex items-end justify-between">
+                    <motion.div whileHover={{ rotate: 3 }} className="relative">
+                      <Avatar className="w-24 h-24 border-[6px] border-[#0f0f11] rounded-full shadow-2xl">
+                        <AvatarImage src={profile.avatarUrl} className="object-cover" />
+                        <AvatarFallback className="bg-red-950 text-red-100 text-2xl font-black">R</AvatarFallback>
+                      </Avatar>
+                      <motion.div 
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-[4px] border-[#0f0f11] rounded-full shadow-xl" 
+                      />
+                    </motion.div>
+                    <motion.div
+                      animate={{ y: [0, -4, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <SiDiscord className="w-8 h-8 text-red-600/20 group-hover:text-red-600/50 transition-colors mb-2" />
+                    </motion.div>
+                  </div>
+                  
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-2xl font-black text-white uppercase tracking-tight italic group-hover:text-red-500 transition-colors">
+                        {profile.discordName}
+                      </h3>
+                    </div>
+                    <p className="text-[10px] text-red-600 font-mono tracking-widest uppercase font-bold opacity-60">
+                      ID: {profile.discordId}
+                    </p>
+                  </div>
+
+                  <div className="h-[1px] bg-red-900/10" />
+
+                  <div className="space-y-3">
+                    <p className="text-zinc-400 font-sans leading-relaxed text-xs group-hover:text-zinc-300 transition-colors whitespace-pre-line">
+                      {profile.discordAbout}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.section>
+
+        <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">
+          <motion.div 
+            whileHover={{ width: 120 }}
+            className="h-[1px] w-16 bg-red-900/50 transition-all duration-700"
+          ></motion.div>
+          <p className="text-zinc-500 text-[8px] uppercase tracking-[0.6em] font-black italic">
+            Ryzeks // 2026
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+}

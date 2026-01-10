@@ -1,0 +1,98 @@
+# Ryzeks
+
+## (Layout inspirado em krisendo.carrd.co)
+
+---
+
+## 🔴 Seção Principal (Hero)
+
+**Foto principal:** usar a imagem enviada (avatar Umbreon vermelho/preto).
+**Fundo:** manter o fundo vermelho escuro do layout original.
+**Nome exibido:**
+
+> **Ryzeks**
+
+**Subtexto curto (abaixo do nome):**
+
+> Discord Profile • Digital Identity
+
+---
+
+## 👤 Sobre mim (1ª pessoa)
+
+Eu sou **Ryzeks**, também conhecido como **Umbreon**.
+
+Sou um **3D Programmer & Artist**, com cerca de **3 anos de experiência**, sempre buscando evoluir tanto no lado técnico quanto criativo. Prezo muito por ser **leal, honesto e confiável** em tudo o que faço.
+
+---
+
+## 🎮 Jogos que eu jogo
+
+*(essa seção fica logo abaixo da foto principal)*
+
+> Layout: **Imagem pequena (capa) à esquerda + nome do jogo à direita**
+
+---
+
+### 🟩 Minecraft
+
+**Capa sugerida:**
+
+* Minecraft – Java Edition (capa oficial quadrada)
+
+---
+
+### 🟩 The Legend of Zelda: Tears of the Kingdom
+
+**Capa sugerida:**
+
+* Zelda TOTK – Key Art oficial
+
+---
+
+### 🟩 Lethal Company
+
+**Capa sugerida:**
+
+* Lethal Company – Steam Capsule Art*
+
+* 🟩 **Minecraft**
+  *(capa do jogo ao lado do nome)*
+
+* 🟩 **The Legend of Zelda: Tears of the Kingdom**
+  *(capa do jogo ao lado do nome)*
+
+* 🟩 **Lethal Company**
+  *(capa do jogo ao lado do nome)*
+
+---
+
+## 💬 Perfil do Discord
+
+**Nome:** Ryzeks
+**Sobre mim (Discord):**
+
+> Experienced 3D Programmer & Artist (3 Years)
+> Loyal, honest and trustworthy
+> Call Me Umbreon
+> •—19/1/21—•
+
+**ID do perfil:** *(usar o ID que você mencionou no Carrd)*
+
+---
+
+## 🎨 Estilo do site
+
+* Tema: **Vermelho escuro / preto**
+* Estilo: minimalista, dark, identidade forte
+* Layout: **idêntico ao krisendo.carrd.co**, apenas com:
+
+  * Nome alterado para **Ryzeks**
+  * Conteúdo sobre Minecraft removido
+  * Conteúdo focado no seu perfil e identidade
+
+---
+
+## 📌 Observação
+
+Este conteúdo já está pronto para ser **copiado e colado no Carrd**, mantendo o mesmo tipo de seções e organização visual do site original.
