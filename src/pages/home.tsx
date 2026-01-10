@@ -271,31 +271,47 @@ const LoadingScreen = () => (
     initial={{ opacity: 1 }}
     exit={{ opacity: 0 }}
     transition={{ duration: 0.8, ease: "easeInOut" }}
-    className="fixed inset-0 z-[100] bg-[#0a0000] flex flex-col items-center justify-center gap-6"
+    className="fixed inset-0 z-[100] bg-[#0a0000] flex flex-col items-center justify-center"
   >
-    <div className="relative">
+    <div className="relative w-24 h-24">
+      {/* Camada externa - Hexágono rotativo */}
       <motion.div 
         animate={{ 
-          scale: [1, 1.2, 1],
-          rotate: [0, 180, 360],
+          rotate: [0, 360],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 border-[3px] border-red-900/30 rounded-[30%] shadow-[0_0_40px_rgba(153,27,27,0.1)]"
+      />
+      
+      {/* Camada média - Quadrado pulsante */}
+      <motion.div 
+        animate={{ 
+          rotate: [45, 225, 45],
+          scale: [0.8, 1, 0.8],
           borderRadius: ["20%", "50%", "20%"]
         }}
-        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="w-16 h-16 border-2 border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.3)]"
+        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-2 border-2 border-red-600 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
       />
+      
+      {/* Núcleo - Círculo de energia */}
       <motion.div 
-        animate={{ opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
-        className="absolute inset-0 blur-xl bg-red-600/30"
+        animate={{ 
+          scale: [0.5, 0.8, 0.5],
+          opacity: [0.5, 1, 0.5]
+        }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-6 bg-red-600 rounded-full blur-[2px] shadow-[0_0_30px_#dc2626]"
+      />
+
+      {/* Brilho ambiental */}
+      <motion.div 
+        animate={{ opacity: [0.1, 0.3, 0.1] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute -inset-10 bg-red-600/10 blur-3xl rounded-full"
       />
     </div>
-    <motion.p 
-      animate={{ opacity: [0.4, 1, 0.4] }}
-      transition={{ duration: 1.5, repeat: Infinity }}
-      className="text-red-600 font-black italic uppercase tracking-[0.4em] text-[10px]"
-    >
-      Carregando Perfil
-    </motion.p>
   </motion.div>
 );
 
