@@ -266,12 +266,53 @@ const DiscordCard = ({ profile }: { profile: typeof profileData }) => {
   );
 };
 
+const LoadingScreen = () => (
+  <motion.div 
+    initial={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.8, ease: "easeInOut" }}
+    className="fixed inset-0 z-[100] bg-[#0a0000] flex flex-col items-center justify-center gap-6"
+  >
+    <div className="relative">
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.2, 1],
+          rotate: [0, 180, 360],
+          borderRadius: ["20%", "50%", "20%"]
+        }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className="w-16 h-16 border-2 border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.3)]"
+      />
+      <motion.div 
+        animate={{ opacity: [0.2, 0.5, 0.2] }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+        className="absolute inset-0 blur-xl bg-red-600/30"
+      />
+    </div>
+    <motion.p 
+      animate={{ opacity: [0.4, 1, 0.4] }}
+      transition={{ duration: 1.5, repeat: Infinity }}
+      className="text-red-600 font-black italic uppercase tracking-[0.4em] text-[10px]"
+    >
+      Carregando Perfil
+    </motion.p>
+  </motion.div>
+);
+
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
   const profile = profileData;
   const games = gamesData;
 
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
+      {isLoading && <LoadingScreen />}
+      
       <BackgroundGlow />
       <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
         <HeroSection profile={profile} />
