@@ -296,35 +296,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-export default function Home() {
-  const profile = profileData;
-  const games = gamesData;
-
-  return (
-    <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
-      <BackgroundGlow />
-      <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
-        <HeroSection profile={profile} />
-        <AboutSection about={profile.about} />
-      </div>
-
-      <GameCarousel games={games} />
-
-      <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
-        <DiscordCard profile={profile} />
-
-        <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">
-          <motion.div 
-            whileHover={{ width: 120 }}
-            className="h-[1px] w-16 bg-red-900/50 transition-all duration-700"
-          ></motion.div>
-          <p className="text-zinc-500 text-[8px] uppercase tracking-[0.6em] font-black italic">
-            Ryzeks // 2026
-          </p>
-        </footer>
-      </div>
-    </div>
-  );
-}
