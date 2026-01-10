@@ -31,8 +31,8 @@ export async function registerRoutes(
     }
   });
 
-  // Seed data if empty
-  await seedDatabase();
+  // Seed data if empty (disabled for static data)
+  // await seedDatabase();
 
   return httpServer;
 }

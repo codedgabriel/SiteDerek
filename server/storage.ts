@@ -1,11 +1,10 @@
-import { db } from "./db";
 import {
-  profile,
-  games,
   type Profile,
   type InsertProfile,
   type Game,
-  type InsertGame
+  type InsertGame,
+  profileData,
+  gamesData
 } from "@shared/schema";
 
 export interface IStorage {
@@ -15,25 +14,22 @@ export interface IStorage {
   createGame(game: InsertGame): Promise<Game>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class MemStorage implements IStorage {
   async getProfile(): Promise<Profile | undefined> {
-    const [result] = await db.select().from(profile);
-    return result;
+    return profileData as Profile;
   }
 
   async createProfile(insertProfile: InsertProfile): Promise<Profile> {
-    const [result] = await db.insert(profile).values(insertProfile).returning();
-    return result;
+    throw new Error("Method not implemented.");
   }
 
   async getGames(): Promise<Game[]> {
-    return await db.select().from(games);
+    return gamesData as Game[];
   }
 
   async createGame(insertGame: InsertGame): Promise<Game> {
-    const [result] = await db.insert(games).values(insertGame).returning();
-    return result;
+    throw new Error("Method not implemented.");
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();
