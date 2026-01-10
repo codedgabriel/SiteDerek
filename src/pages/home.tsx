@@ -107,6 +107,8 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
     emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
 
+  const slides = emblaApi?.slideNodes() || [];
+
   return (
     <motion.section 
       initial={{ opacity: 0 }}
