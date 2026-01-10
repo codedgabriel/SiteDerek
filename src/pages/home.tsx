@@ -210,13 +210,18 @@ const DiscordCard = ({ profile }: { profile: typeof profileData }) => {
         className="h-full cursor-grab active:cursor-grabbing"
       >
         <Card className="bg-[#0f0f11] border-red-900/20 overflow-hidden relative group rounded-2xl shadow-2xl hover:border-red-600/30 transition-colors duration-500" style={ { transform: "translateZ(50px)" } }>
-          <div className="h-24 bg-red-900/10 relative overflow-hidden" style={ { transform: "translateZ(25px)" } }>
+          <div className="h-32 relative overflow-hidden" style={ { transform: "translateZ(25px)" } }>
+             <img 
+               src="/discord-banner.png" 
+               alt="Discord Banner" 
+               className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] via-transparent to-transparent" />
              <motion.div 
                animate={{ opacity: [0.1, 0.3, 0.1] }}
                transition={{ duration: 3, repeat: Infinity }}
                className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(153,27,27,0.2),_transparent)]" 
              />
-             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent" />
           </div>
           <CardContent className="p-6 pt-0 relative" style={ { transform: "translateZ(75px)" } }>
             <div className="relative -top-12 flex flex-col gap-4">
