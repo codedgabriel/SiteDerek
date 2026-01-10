@@ -267,12 +267,7 @@ const DiscordCard = ({ profile }: { profile: typeof profileData }) => {
 };
 
 const LoadingScreen = () => (
-  <motion.div 
-    initial={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.8, ease: "easeInOut" }}
-    className="fixed inset-0 z-[100] bg-[#0a0000] flex flex-col items-center justify-center"
-  >
+  <div className="w-full h-full bg-[#0a0000] flex flex-col items-center justify-center">
     <div className="relative w-24 h-24">
       {/* Camada externa - Hexágono rotativo */}
       <motion.div 
@@ -312,7 +307,7 @@ const LoadingScreen = () => (
         className="absolute -inset-10 bg-red-600/10 blur-3xl rounded-full"
       />
     </div>
-  </motion.div>
+  </div>
 );
 
 export default function Home() {
@@ -326,17 +321,24 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
+    <div className={`min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 ${isLoading ? 'h-screen overflow-hidden' : 'min-h-screen overflow-x-hidden'}`}>
       <AnimatePresence mode="wait">
         {isLoading ? (
-          <LoadingScreen key="loading" />
+          <motion.div 
+            key="loading-container"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-[#0a0000] flex items-center justify-center pointer-events-none"
+          >
+            <LoadingScreen />
+          </motion.div>
         ) : (
           <motion.div 
             key="content"
             initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
             animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full flex flex-col items-center"
+            className="w-full flex flex-col items-center relative"
           >
             <BackgroundGlow />
             <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
