@@ -123,14 +123,13 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
                 key={`${game.id}-${idx}`} 
                 className="flex-[0_0_220px] min-w-0 px-3"
               >
-                <motion.div 
-                  whileHover={{ y: -8 }}
+                <div 
                   className="group/item relative aspect-[2/3] rounded-xl overflow-hidden border border-red-900/20 transition-all duration-500 hover:border-red-600/50 shadow-2xl"
                 >
                   <img 
                     src={game.imagePath || game.imageUrl} 
                     alt={game.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
                   <div className="absolute inset-0 bg-red-900/10 opacity-0 group-hover/item:opacity-40 transition-opacity" />
