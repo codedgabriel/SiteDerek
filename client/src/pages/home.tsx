@@ -1,21 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { Game, Profile } from "@/lib/schema";
+import { profileData, gamesData } from "@/lib/schema";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SiDiscord } from "react-icons/si";
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Home() {
-  const { data: profile, isLoading: profileLoading } = useQuery<Profile>({
-    queryKey: ["/api/profile"],
-  });
-
-  const { data: games, isLoading: gamesLoading } = useQuery<Game[]>({
-    queryKey: ["/api/games"],
-  });
+  const profile = profileData;
+  const games = gamesData;
 
   const [emblaRef] = useEmblaCarousel(
     { 
@@ -26,33 +19,6 @@ export default function Home() {
     }, 
     [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })]
   );
-
-  if (profileLoading || gamesLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0000] p-6 space-y-12">
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
-        >
-          <Skeleton className="w-32 h-32 rounded-full bg-red-900/20" />
-        </motion.div>
-        <div className="space-y-4 w-full max-w-2xl">
-          <Skeleton className="h-8 w-1/3 mx-auto bg-red-900/10" />
-          <Skeleton className="h-4 w-full bg-red-900/5" />
-          <Skeleton className="h-4 w-full bg-red-900/5" />
-          <Skeleton className="h-4 w-2/3 mx-auto bg-red-900/5" />
-        </div>
-        <div className="flex gap-4 overflow-hidden w-full max-w-4xl">
-           {[1,2,3,4].map(i => (
-             <Skeleton key={i} className="flex-[0_0_280px] aspect-[2/3] rounded-2xl bg-red-900/5" />
-           ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!profile) return null;
 
   return (
     <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
