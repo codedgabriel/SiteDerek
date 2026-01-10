@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { profileData, gamesData } from "@/lib/schema";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SiDiscord } from "react-icons/si";
@@ -83,7 +83,8 @@ const AboutSection = ({ about }: { about: string }) => (
 );
 
 const GameCarousel = ({ games }: { games: typeof gamesData }) => {
-  const [emblaRef] = useEmblaCarousel(
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true,
       dragFree: true,
@@ -92,6 +93,18 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
     }, 
     [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })]
   );
+
+  const onSelect = React.useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  React.useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
     <motion.section 
@@ -150,70 +163,140 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
   );
 };
 
-const DiscordCard = ({ profile }: { profile: typeof profileData }) => (
-  <motion.section 
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8 }}
-    className="w-full relative z-10"
-  >
-    <motion.div whileHover={{ scale: 1.01 }} className="h-full">
-      <Card className="bg-[#0f0f11] border-red-900/20 overflow-hidden relative group rounded-2xl shadow-2xl hover:border-red-600/30 transition-colors duration-500">
-        <div className="h-24 bg-red-900/10 relative overflow-hidden">
-           <motion.div 
-             animate={{ opacity: [0.1, 0.3, 0.1] }}
-             transition={{ duration: 3, repeat: Infinity }}
-             className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(153,27,27,0.2),_transparent)]" 
-           />
-           <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent" />
-        </div>
-        <CardContent className="p-6 pt-0 relative">
-          <div className="relative -top-12 flex flex-col gap-4">
-            <div className="flex items-end justify-between">
-              <motion.div whileHover={{ rotate: 3 }} className="relative">
-                <Avatar className="w-24 h-24 border-[6px] border-[#0f0f11] rounded-full shadow-2xl">
-                  <AvatarImage src={profile.avatarUrl} className="object-cover" />
-                  <AvatarFallback className="bg-red-950 text-red-100 text-2xl font-black">R</AvatarFallback>
-                </Avatar>
-                <motion.div 
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-[4px] border-[#0f0f11] rounded-full shadow-xl" 
-                />
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, -4, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <SiDiscord className="w-8 h-8 text-red-600/20 group-hover:text-red-600/50 transition-colors mb-2" />
-              </motion.div>
-            </div>
-            
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-2">
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight italic group-hover:text-red-500 transition-colors">
-                  {profile.discordName}
-                </h3>
-              </div>
-              <p className="text-[10px] text-red-600 font-mono tracking-widest uppercase font-bold opacity-60">
-                ID: {profile.discordId}
-              </p>
-            </div>
+const DiscordCard = ({ profile }: { profile: typeof profileData }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-            <div className="h-[1px] bg-red-900/10" />
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
 
-            <div className="space-y-3">
-              <p className="text-zinc-400 font-sans leading-relaxed text-xs group-hover:text-zinc-300 transition-colors whitespace-pre-line">
-                {profile.discordAbout}
-              </p>
-            </div>
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.section 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="w-full relative z-10"
+      style={ { perspective: "1000px" } }
+    >
+      <motion.div 
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={ {
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        } }
+        className="h-full cursor-grab active:cursor-grabbing"
+      >
+        <Card className="bg-[#0f0f11] border-red-900/20 overflow-hidden relative group rounded-2xl shadow-2xl hover:border-red-600/30 transition-colors duration-500" style={ { transform: "translateZ(50px)" } }>
+          <div className="h-24 bg-red-900/10 relative overflow-hidden" style={ { transform: "translateZ(25px)" } }>
+             <motion.div 
+               animate={{ opacity: [0.1, 0.3, 0.1] }}
+               transition={{ duration: 3, repeat: Infinity }}
+               className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(153,27,27,0.2),_transparent)]" 
+             />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f11] to-transparent" />
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  </motion.section>
-);
+          <CardContent className="p-6 pt-0 relative" style={ { transform: "translateZ(75px)" } }>
+            <div className="relative -top-12 flex flex-col gap-4">
+              <div className="flex items-end justify-between">
+                <motion.div whileHover={{ rotate: 3 }} className="relative">
+                  <Avatar className="w-24 h-24 border-[6px] border-[#0f0f11] rounded-full shadow-2xl">
+                    <AvatarImage src={profile.avatarUrl} className="object-cover" />
+                    <AvatarFallback className="bg-red-950 text-red-100 text-2xl font-black">R</AvatarFallback>
+                  </Avatar>
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-[4px] border-[#0f0f11] rounded-full shadow-xl" 
+                  />
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <SiDiscord className="w-8 h-8 text-red-600/20 group-hover:text-red-600/50 transition-colors mb-2" />
+                </motion.div>
+              </div>
+              
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-2xl font-black text-white uppercase tracking-tight italic group-hover:text-red-500 transition-colors">
+                    {profile.discordName}
+                  </h3>
+                </div>
+                <p className="text-[10px] text-red-600 font-mono tracking-widest uppercase font-bold opacity-60">
+                  ID: {profile.discordId}
+                </p>
+              </div>
+
+              <div className="h-[1px] bg-red-900/10" />
+
+              <div className="space-y-3">
+                <p className="text-zinc-400 font-sans leading-relaxed text-xs group-hover:text-zinc-300 transition-colors whitespace-pre-line">
+                  {profile.discordAbout}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.section>
+  );
+};
+
+export default function Home() {
+  const profile = profileData;
+  const games = gamesData;
+
+  return (
+    <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
+      <BackgroundGlow />
+      <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
+        <HeroSection profile={profile} />
+        <AboutSection about={profile.about} />
+      </div>
+
+      <GameCarousel games={games} />
+
+      <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
+        <DiscordCard profile={profile} />
+
+        <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">
+          <motion.div 
+            whileHover={{ width: 120 }}
+            className="h-[1px] w-16 bg-red-900/50 transition-all duration-700"
+          ></motion.div>
+          <p className="text-zinc-500 text-[8px] uppercase tracking-[0.6em] font-black italic">
+            Ryzeks // 2026
+          </p>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 
 export default function Home() {
   const profile = profileData;
