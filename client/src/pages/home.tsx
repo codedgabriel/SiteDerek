@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Game, Profile } from "@shared/schema";
+import { Game, Profile } from "@/lib/schema";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";

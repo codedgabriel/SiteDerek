@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { User, MessageSquare } from "lucide-react";
-import type { Profile } from "@shared/schema";
+import type { Profile } from "@/lib/schema";
 
 interface DiscordCardProps {
   profile: Profile;

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import type { Profile } from "@shared/schema";
+import type { Profile } from "@/lib/schema";
 
 interface AboutMeProps {
   profile: Profile;

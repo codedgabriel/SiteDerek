@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Gamepad2 } from "lucide-react";
-import type { Game } from "@shared/schema";
+import type { Game } from "@/lib/schema";
 import {
   Carousel,
   CarouselContent,
