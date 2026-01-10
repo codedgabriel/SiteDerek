@@ -19,12 +19,7 @@ const BackgroundGlow = () => (
 );
 
 const HeroSection = ({ profile }: { profile: typeof profileData }) => (
-  <motion.section 
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, ease: "circOut" }}
-    className="flex flex-col items-center text-center gap-4 relative z-10"
-  >
+  <section className="flex flex-col items-center text-center gap-4 relative z-10">
     <motion.div 
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
@@ -55,7 +50,7 @@ const HeroSection = ({ profile }: { profile: typeof profileData }) => (
         <div className="h-[1px] w-24 bg-red-900/50"></div>
       </motion.div>
     </div>
-  </motion.section>
+  </section>
 );
 
 const AboutSection = ({ about }: { about: string }) => (
@@ -88,8 +83,9 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
     { 
       loop: true,
       dragFree: true,
-      containScroll: false,
-      align: "center"
+      containScroll: "trimSnaps",
+      align: "center",
+      watchDrag: true
     }, 
     [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })]
   );
@@ -112,7 +108,7 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 1 }}
-      className="w-full flex flex-col gap-6 z-10 my-8"
+      className="w-full flex flex-col gap-6 z-10 mt-8 mb-24"
     >
       <div className="max-w-xl mx-auto w-full px-6 flex items-center gap-4 group">
         <h2 className="text-[9px] uppercase tracking-[0.4em] text-red-700 font-black whitespace-nowrap transition-colors group-hover:text-red-500">
@@ -237,12 +233,16 @@ const DiscordCard = ({ profile }: { profile: typeof profileData }) => {
                     className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-[4px] border-[#0f0f11] rounded-full shadow-xl" 
                   />
                 </motion.div>
-                <motion.div
+                <motion.a
+                  href="https://discord.com/users/1249495664673554483"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="cursor-pointer"
                 >
                   <SiDiscord className="w-8 h-8 text-red-600/20 group-hover:text-red-600/50 transition-colors mb-2" />
-                </motion.div>
+                </motion.a>
               </div>
               
               <div className="space-y-0.5">
@@ -325,24 +325,38 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, []);
 
+  React.useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100%";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    };
+  }, [isLoading]);
+
   return (
-    <div className={`min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 ${isLoading ? 'h-screen overflow-hidden' : 'min-h-screen overflow-x-hidden'}`}>
+    <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
       <AnimatePresence mode="wait">
         {isLoading ? (
           <motion.div 
             key="loading-container"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-[#0a0000] flex items-center justify-center pointer-events-none"
+            className="fixed inset-0 z-[100] bg-[#0a0000] flex items-center justify-center"
           >
             <LoadingScreen />
           </motion.div>
         ) : (
           <motion.div 
             key="content"
-            initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="w-full flex flex-col items-center relative"
           >
             <BackgroundGlow />
@@ -353,7 +367,7 @@ export default function Home() {
 
             <GameCarousel games={games} />
 
-            <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
+            <div className="max-w-xl w-full px-6 pb-24 flex flex-col items-center gap-10 relative">
               <DiscordCard profile={profile} />
 
               <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">

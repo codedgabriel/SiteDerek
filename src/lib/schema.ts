@@ -6,7 +6,7 @@ export const profileData = {
   subtext: "Discord Profile • Digital Identity",
   about: "Opa, Me chamo Ryzeks, também conhecido como Umbreon. Sou um Programador 3D & Artista, com 3 anos de experiência, Estou sempre buscando evoluir tanto minhas abilidades técnicas quanto as criativas. Prezo muito por ser leal, honesto e confiável em tudo que faço.",
   discordName: "™‧₊☽ʀʏᴢᴇᴋs☾₊‧™",
-  discordAbout: "Experienced 3D Programmer & Artist (3 Years)\n\nLoyal, honest and trustworthy \n\nCall Me Umbreon\n•—19/1/21—•",
+  discordAbout: "Experienced 3D Programmer & Artist (3 Years)\n\nLoyal, honest and trustworthy \n\nCall Me Umbreon",
   discordId: "ryzekss",
   avatarUrl: "/images/avatar.png",
   backgroundUrl: "https://placehold.co/1920x1080/1a0505/8B0000"
@@ -21,7 +21,8 @@ export const gamesData = [
   { id: 6, title: "Dead by Daylight", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Dead%20by%20Daylight", imagePath: "/images/games/dead-by-daylight.png" },
   { id: 7, title: "Elden Ring", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Elden%20Ring", imagePath: "/images/games/elder-ring.jpg" },
   { id: 8, title: "Sons of the Forest", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Sons%20of%20the%20Forest", imagePath: "/images/games/sons-of-the-forest.jpeg" },
-  { id: 9, title: "Minecraft", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Minecraft", imagePath: "/images/games/minecraft.png" }
+  { id: 9, title: "Minecraft", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Minecraft", imagePath: "/images/games/minecraft.png" },
+  { id: 10, title: "Zelda Tears of the Kingdom", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Zelda%20TotK", imagePath: "/images/games/zelda-totk.png" }
 ];
 
 export type Profile = typeof profileData;
