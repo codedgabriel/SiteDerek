@@ -51,6 +51,11 @@
       radial-gradient(circle at 50% 0%, rgba(139, 0, 0, 0.15), transparent 70%),
       linear-gradient(to bottom, #0a0a0a, #000000);
     min-height: 100vh;
+    cursor: url('/cursor.png'), auto;
+  }
+  
+  a, button, [role="button"], .cursor-pointer {
+    cursor: url('/cursor.png'), pointer;
   }
   
   h1, h2, h3, h4, h5, h6 {
