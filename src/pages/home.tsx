@@ -116,7 +116,7 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
         <div className="absolute right-0 top-0 bottom-0 w-[20%] bg-gradient-to-l from-[#0a0000] to-transparent z-10 pointer-events-none" />
         
         <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-          <div className="flex px-[10%]">
+          <div className="flex">
             {games?.map((game, idx) => (
               <motion.div 
                 key={game.id} 
@@ -124,7 +124,7 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
-                className="flex-[0_0_220px] min-w-0 pl-4"
+                className="flex-[0_0_220px] min-w-0"
               >
                 <motion.div 
                   whileHover={{ y: -8 }}
