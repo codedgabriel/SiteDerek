@@ -1,3 +1,4 @@
+import React from "react";
 import { profileData, gamesData } from "@/lib/schema";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
@@ -82,15 +83,29 @@ const AboutSection = ({ about }: { about: string }) => (
 );
 
 const GameCarousel = ({ games }: { games: typeof gamesData }) => {
-  const [emblaRef] = useEmblaCarousel(
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true,
-      dragFree: true,
+      dragFree: false,
       containScroll: false,
-      align: "center"
+      align: "center",
+      skipSnaps: false
     }, 
     [Autoplay({ delay: 2000, stopOnInteraction: false, stopOnMouseEnter: true })]
   );
+
+  const onSelect = React.useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  React.useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
     <motion.section 
@@ -111,42 +126,51 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
         />
       </div>
       
-      <div className="relative w-full group overflow-hidden">
+      <div className="relative w-full group overflow-hidden py-10">
         <div className="absolute left-0 top-0 bottom-0 w-[20%] bg-gradient-to-r from-[#0a0000] to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-[20%] bg-gradient-to-l from-[#0a0000] to-transparent z-10 pointer-events-none" />
         
         <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
           <div className="flex">
-            {games?.map((game, idx) => (
-              <motion.div 
-                key={game.id} 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
-                viewport={{ once: true }}
-                className="flex-[0_0_220px] min-w-0"
-              >
+            {games?.map((game, idx) => {
+              const isSelected = idx === selectedIndex;
+              return (
                 <motion.div 
-                  whileHover={{ y: -8 }}
-                  className="group/item relative aspect-[2/3] rounded-xl overflow-hidden border border-red-900/20 transition-all duration-500 hover:border-red-600/50 shadow-2xl"
+                  key={game.id} 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  animate={{ 
+                    scale: isSelected ? 1.15 : 0.9,
+                    zIndex: isSelected ? 20 : 10,
+                    opacity: isSelected ? 1 : 0.5
+                  }}
+                  transition={{ 
+                    scale: { duration: 0.4, ease: "easeOut" },
+                    opacity: { duration: 0.4 }
+                  }}
+                  className="flex-[0_0_240px] min-w-0 px-4"
                 >
-                  <img 
-                    src={game.imagePath || game.imageUrl} 
-                    alt={game.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
-                  <div className="absolute inset-0 bg-red-900/10 opacity-0 group-hover/item:opacity-40 transition-opacity" />
-                  
-                  <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 group-hover/item:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-white font-black text-sm uppercase tracking-tight line-clamp-2 drop-shadow-lg">
-                      {game.title}
-                    </h3>
-                    <div className="w-6 h-0.5 bg-red-600 mt-1.5 rounded-full transform origin-left scale-x-0 group-hover/item:scale-x-100 transition-transform duration-500"></div>
-                  </div>
+                  <motion.div 
+                    className="group/item relative aspect-[2/3] rounded-xl overflow-hidden border border-red-900/20 transition-all duration-500 hover:border-red-600/50 shadow-2xl"
+                  >
+                    <img 
+                      src={game.imagePath || game.imageUrl} 
+                      alt={game.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover/item:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80" />
+                    <div className="absolute inset-0 bg-red-900/10 opacity-0 group-hover/item:opacity-40 transition-opacity" />
+                    
+                    <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 group-hover/item:translate-y-0 transition-transform duration-500">
+                      <h3 className="text-white font-black text-sm uppercase tracking-tight line-clamp-2 drop-shadow-lg">
+                        {game.title}
+                      </h3>
+                      <div className="w-6 h-0.5 bg-red-600 mt-1.5 rounded-full transform origin-left scale-x-0 group-hover/item:scale-x-100 transition-transform duration-500"></div>
+                    </div>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
