@@ -107,8 +107,6 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
     emblaApi.on("reInit", onSelect);
   }, [emblaApi, onSelect]);
 
-  const slides = emblaApi?.slideNodes() || [];
-
   return (
     <motion.section 
       initial={{ opacity: 0 }}
@@ -133,26 +131,24 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
         <div className="absolute right-0 top-0 bottom-0 w-[20%] bg-gradient-to-l from-[#0a0000] to-transparent z-10 pointer-events-none" />
         
         <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
-          <div className="flex">
-            {games?.map((game, idx) => {
-              const isSelected = idx === selectedIndex;
+          <div className="flex touch-pan-y">
+            {[...games, ...games, ...games]?.map((game, idx) => {
+              const totalGames = games.length;
+              const isSelected = (idx % totalGames) === selectedIndex;
               return (
-                <motion.div 
-                  key={game.id} 
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  animate={{ 
-                    scale: isSelected ? 1.15 : 0.9,
-                    zIndex: isSelected ? 20 : 10,
-                    opacity: isSelected ? 1 : 0.5
-                  }}
-                  transition={{ 
-                    scale: { duration: 0.4, ease: "easeOut" },
-                    opacity: { duration: 0.4 }
-                  }}
+                <div 
+                  key={`${game.id}-${idx}`} 
                   className="flex-[0_0_240px] min-w-0 px-4"
                 >
                   <motion.div 
+                    animate={{ 
+                      scale: isSelected ? 1.15 : 0.9,
+                      opacity: isSelected ? 1 : 0.4
+                    }}
+                    transition={{ 
+                      duration: 0.5,
+                      ease: [0.32, 0.72, 0, 1]
+                    }}
                     className="group/item relative aspect-[2/3] rounded-xl overflow-hidden border border-red-900/20 transition-all duration-500 hover:border-red-600/50 shadow-2xl"
                   >
                     <img 
@@ -170,7 +166,7 @@ const GameCarousel = ({ games }: { games: typeof gamesData }) => {
                       <div className="w-6 h-0.5 bg-red-600 mt-1.5 rounded-full transform origin-left scale-x-0 group-hover/item:scale-x-100 transition-transform duration-500"></div>
                     </div>
                   </motion.div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
