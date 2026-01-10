@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { profileData, gamesData } from "@/lib/schema";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SiDiscord } from "react-icons/si";
@@ -327,29 +327,41 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0000] text-zinc-100 flex flex-col items-center selection:bg-red-500/30 overflow-x-hidden">
-      {isLoading && <LoadingScreen />}
-      
-      <BackgroundGlow />
-      <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
-        <HeroSection profile={profile} />
-        <AboutSection about={profile.about} />
-      </div>
-
-      <GameCarousel games={games} />
-
-      <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
-        <DiscordCard profile={profile} />
-
-        <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <LoadingScreen key="loading" />
+        ) : (
           <motion.div 
-            whileHover={{ width: 120 }}
-            className="h-[1px] w-16 bg-red-900/50 transition-all duration-700"
-          ></motion.div>
-          <p className="text-zinc-500 text-[8px] uppercase tracking-[0.6em] font-black italic">
-            Ryzeks // 2026
-          </p>
-        </footer>
-      </div>
+            key="content"
+            initial={{ opacity: 0, scale: 0.98, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full flex flex-col items-center"
+          >
+            <BackgroundGlow />
+            <div className="max-w-xl w-full px-6 py-12 flex flex-col items-center gap-10 relative">
+              <HeroSection profile={profile} />
+              <AboutSection about={profile.about} />
+            </div>
+
+            <GameCarousel games={games} />
+
+            <div className="max-w-xl w-full px-6 pb-12 flex flex-col items-center gap-10 relative">
+              <DiscordCard profile={profile} />
+
+              <footer className="flex flex-col items-center gap-3 py-6 opacity-30 group">
+                <motion.div 
+                  whileHover={{ width: 120 }}
+                  className="h-[1px] w-16 bg-red-900/50 transition-all duration-700"
+                ></motion.div>
+                <p className="text-zinc-500 text-[8px] uppercase tracking-[0.6em] font-black italic">
+                  Ryzeks // 2026
+                </p>
+              </footer>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
