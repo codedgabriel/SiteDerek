@@ -4,9 +4,9 @@ export const profileData = {
   id: 1,
   name: "Ryzeks",
   subtext: "Discord Profile • Digital Identity",
-  about: "Eu sou Ryzeks, também conhecido como Umbreon.\n\nSou um 3D Programmer & Artist, com cerca de 3 anos de experiência, sempre buscando evoluir tanto no lado técnico quanto criativo. Prezo muito por ser leal, honesto e confiável em tudo o que faço.",
+  about: "Opa, Me chamo Ryzeks, também conhecido como Umbreon. Sou um Programador 3D & Artista, com 3 anos de experiência, Estou sempre buscando evoluir tanto minhas abilidades técnicas quanto as criativas. Prezo muito por ser leal, honesto e confiável em tudo que faço.",
   discordName: "Ryzeks",
-  discordAbout: "Experienced 3D Programmer & Artist (3 Years)\nLoyal, honest and trustworthy\nCall Me Umbreon\n•—19/1/21—•",
+  discordAbout: "Opa, Me chamo Ryzeks, também conhecido como Umbreon. Sou um Programador 3D & Artista, com 3 anos de experiência, Estou sempre buscando evoluir tanto minhas abilidades técnicas quanto as criativas. Prezo muito por ser leal, honesto e confiável em tudo que faço.",
   discordId: "Ryzeks",
   avatarUrl: "/images/avatar.png",
   backgroundUrl: "https://placehold.co/1920x1080/1a0505/8B0000"
