@@ -44,11 +44,11 @@ export function GameList({ games }: GameListProps) {
           skipSnaps: false
         }}
       >
-        <CarouselContent className="-ml-6 flex items-center h-[500px]">
+        <CarouselContent className="flex items-center h-[500px]">
           {games.map((game, index) => {
             const isSelected = current === index;
             return (
-              <CarouselItem key={`${game.id}-${index}`} className="pl-6 basis-[70%] sm:basis-1/3 transition-all duration-700">
+              <CarouselItem key={`${game.id}-${index}`} className="basis-[70%] sm:basis-1/3 transition-all duration-700 px-3">
                 <motion.div
                   animate={{ 
                     scale: isSelected ? 1.5 : 0.7,
