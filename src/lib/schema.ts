@@ -22,7 +22,8 @@ export const gamesData = [
   { id: 7, title: "Elden Ring", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Elden%20Ring", imagePath: "/images/games/elder-ring.jpg" },
   { id: 8, title: "Sons of the Forest", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Sons%20of%20the%20Forest", imagePath: "/images/games/sons-of-the-forest.jpeg" },
   { id: 9, title: "Minecraft", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Minecraft", imagePath: "/images/games/minecraft.png" },
-  { id: 10, title: "Zelda Tears of the Kingdom", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Zelda%20TotK", imagePath: "/images/games/zelda-totk.png" }
+  { id: 10, title: "Minecraft: Story Mode", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Zelda%20TotK", imagePath: "/images/games/minesm.jpg" },
+  { id: 11, title: "Zelda Tears of the Kingdom", imageUrl: "https://placehold.co/300x450/1a0505/8B0000?text=Zelda%20TotK", imagePath: "/images/games/zelda-totk.png" }
 ];
 
 export type Profile = typeof profileData;
